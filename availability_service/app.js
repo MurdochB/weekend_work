@@ -24,16 +24,16 @@ healthcheckAllEndpoints();
 function healthcheckAllEndpoints(){
   // For each endpoint
   for(i = 0; i < endpoint.length; i++){
-    var opt = { 'url': endpoint[i].url, 'timeout': default_timeout, json: true };
+    var opt = { 'url': endpoint[i].url, 'timeout': default_timeout, json: true, time: true };
     healthcheckEndpoint(opt, endpoint[i].name);
   }
 }
 function healthcheckEndpoint(opt, name){
-  logger.debug(name + ": healthcheck request sent");
+  logger.debug("healthcheck request sent to: " + name);
   request(opt, function (err, res, body) {
     var retest_delay = retest_wait_time;
     if (err == null){
-      logger.debug(name + ": " + body.msg);
+      logger.debug(name + ": SUCCESS in " + res.elapsedTime + "ms");
     }else{
       logger.error(name + ": " + err);
       retest_delay = error_retest_wait_time;
