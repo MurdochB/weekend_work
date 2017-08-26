@@ -4,6 +4,7 @@
   "description": "This application has 3 endpoints. Generate a random number, drop your request & randomly drop your request",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
