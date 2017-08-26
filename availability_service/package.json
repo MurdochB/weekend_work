@@ -1,0 +1,20 @@
+{
+  "name": "availability_service",
+  "version": "1.0.0",
+  "description": "This application calls endpoints and logs their response times",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Availability",
+    "Weekend"
+  ],
+  "author": "Brandon M",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.4",
+    "log4js": "^2.3.3",
+    "request": "^2.81.0"
+  }
+}
