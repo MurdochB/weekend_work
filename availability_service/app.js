@@ -10,13 +10,13 @@ logger.level = 'debug';
 // config
 var port = 3002;
 var default_timeout = 3000;         // How long to wait for a request to complete
-var retest_wait_time = 1000;        // How long to wait after a health check to do another
-var error_retest_wait_time = 1000;  // How long to wait after a unsuccessful health check to do another
+var retest_wait_time = 10000;        // How long to wait after a health check to do another
+var error_retest_wait_time = 10000;  // How long to wait after a unsuccessful health check to do another
 
 var dummy_service_base_url = "http://localhost:3001";
 // Endpoints to test
 var endpoint = [
-  {  "name": "random_delay_or_drop", "url": dummy_service_base_url + "/endpoint/random_delay_or_drop" }
+  {  "name": "Argos_Home", "url": "https://service.cms.author.pre-prod.eu-west-1.deveng.systems/argos/home.json" }
 ];
 
 healthcheckAllEndpoints();
@@ -34,6 +34,7 @@ function healthcheckEndpoint(opt, name){
     var retest_delay = retest_wait_time;
     if (err == null){
       logger.debug(name + ": SUCCESS in " + res.elapsedTime + "ms");
+      logger.debug(name + ": BODY: " + body.title);
     }else{
       logger.error(name + ": " + err);
       retest_delay = error_retest_wait_time;
