@@ -7,18 +7,30 @@ var app = express();
 
 log4js.configure({
   appenders: {
+    logstash_in_docker: {
+      type: 'logstashUDP',
+      host: 'localhost',
+      port: 5959,
+      fields: {
+        instance: 'Local instance',
+        source: 'myApp',
+        environment: 'development'
+      }
+    },
     console: { type: 'console', },
     log_file: { type: 'file', filename: 'logs/app.log' }
   },
   categories: {
+    onlyLogstash: { appenders: ['logstash_in_docker'], level: 'trace' },
     onlyConsole: { appenders: ['console'], level: 'trace' },
-    default: { appenders: ['console', 'log_file'], level: 'debug' }
-
+    default: { appenders: ['console', 'log_file', 'logstash_in_docker'], level: 'debug' }
   }
 });
 
 var logger = log4js.getLogger();
 var onlyConsoleLogger = log4js.getLogger('onlyConsole');
+var onlyLogstash = log4js.getLogger('onlyLogstash');
+onlyLogstash.info('Hello Logstash', { instance: "BrandonsApp" });
 onlyConsoleLogger.info('Logger starting up with level: ' + onlyConsoleLogger.level);
 onlyConsoleLogger.trace('- TRACE');
 onlyConsoleLogger.debug('- DEBUG');
