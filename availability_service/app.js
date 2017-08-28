@@ -4,8 +4,28 @@ var log4js = require('log4js');
 var request = require('request');
 
 var app = express();
+
+log4js.configure({
+  appenders: {
+    console: { type: 'console', },
+    log_file: { type: 'file', filename: 'logs/app.log' }
+  },
+  categories: {
+    onlyConsole: { appenders: ['console'], level: 'trace' },
+    default: { appenders: ['console', 'log_file'], level: 'debug' }
+
+  }
+});
+
 var logger = log4js.getLogger();
-logger.level = 'debug';
+var onlyConsoleLogger = log4js.getLogger('onlyConsole');
+onlyConsoleLogger.info('Logger starting up with level: ' + onlyConsoleLogger.level);
+onlyConsoleLogger.trace('- TRACE');
+onlyConsoleLogger.debug('- DEBUG');
+onlyConsoleLogger.info('- INFO');
+onlyConsoleLogger.warn('- WARN');
+onlyConsoleLogger.error('- ERROR');
+onlyConsoleLogger.fatal('- FATAL');
 
 // config
 var port = 3002;
@@ -22,9 +42,11 @@ var endpoint = [
 healthcheckAllEndpoints();
 
 function healthcheckAllEndpoints(){
+  logger.info("#   Starting healthcheck for all endpoints    #");
   // For each endpoint
   for(i = 0; i < endpoint.length; i++){
     var opt = { 'url': endpoint[i].url, 'timeout': default_timeout, json: true, time: true };
+    logger.info("#   Healthcheck for \"" + endpoint[i].name + "\" started.");
     healthcheckEndpoint(opt, endpoint[i].name);
   }
 }
@@ -33,7 +55,7 @@ function healthcheckEndpoint(opt, name){
   request(opt, function (err, res, body) {
     var retest_delay = retest_wait_time;
     if (err == null){
-      logger.debug(name + ": SUCCESS in " + res.elapsedTime + "ms");
+      logger.info(name + ": SUCCESS in " + res.elapsedTime + "ms");
     }else{
       logger.error(name + ": " + err);
       retest_delay = error_retest_wait_time;
@@ -62,5 +84,5 @@ app.route('/')
     );
   });
 
-console.log("Availability service listening on port " + port);
+onlyConsoleLogger.info("Availability service listening on port " + port);
 app.listen(port);
